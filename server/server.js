@@ -23,9 +23,15 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/edutest';
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB Connected');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    // Only start the HTTP server when running locally (not on Vercel)
+    if (process.env.VERCEL !== '1') {
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    }
   })
   .catch((err) => {
     console.error('Database connection failed', err);
     process.exit(1);
   });
+
+// Export for Vercel serverless
+module.exports = app;
